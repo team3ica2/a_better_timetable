@@ -139,6 +139,7 @@ CREATE TABLE `students` (
   `user_id` int(11) NOT NULL,
   `current_semester` int(11) DEFAULT NULL,
   `programme_id` int(11) DEFAULT NULL,
+  `semester_tuition` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`student_id`),
   KEY `user_id_idx` (`user_id`),
   CONSTRAINT `user_id_students` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
