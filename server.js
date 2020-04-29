@@ -18,11 +18,11 @@ app.use(bodyParser.json());
 
 // returns an array of JSON objects with all of the classes
 async function getClasses() {
+  const classes = [];
   let conn;
   try {
     conn = await pool.getConnection();
     const dbRet = await conn.query('SELECT * FROM classes');
-    var classes = [];
 
     // This is to return classes without meta information
     // TODO: Find a simpler way
@@ -30,13 +30,13 @@ async function getClasses() {
       classes.push(elem);
     }
   } catch (err) {
-    throw err;
-  } finally {
-    if (conn) {
-      conn.end();
-      return classes;
-    }
+    console.log(err);
   }
+  if (conn) {
+    conn.end();
+    return classes;
+  }
+  return "Couldn't connect to the database";
 }
 
 // Accepts a JSON object and creates a class
