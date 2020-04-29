@@ -5,10 +5,10 @@ const mariadb = require('mariadb');
 const app = express();
 const port = 3000;
 const pool = mariadb.createPool({
-  host: 'localhost',
+  host: 'mariadb',
   user: 'root',
-  password: 'team3',
-  database: 'PC_Timetable',
+  password: 'hahpie1L',
+  database: 'timetable',
   port: 3306,
 });
 
