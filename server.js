@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mariadb = require('mariadb');
@@ -5,11 +6,11 @@ const mariadb = require('mariadb');
 const app = express();
 const port = 3000;
 const pool = mariadb.createPool({
-  host: 'mariadb',
-  user: 'root',
-  password: 'hahpie1L',
-  database: 'timetable',
-  port: 3306,
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DATABASE,
+  port: process.env.PORT || 3306,
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
