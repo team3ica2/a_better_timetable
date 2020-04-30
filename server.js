@@ -41,6 +41,7 @@ async function getClasses() {
 }
 
 // Accepts a JSON object and creates a class
+// TODO: Insert data on specified position when looping through the array.
 async function postClass(classJson) {
   let conn;
   try {
@@ -50,6 +51,51 @@ async function postClass(classJson) {
       vals.push(classJson[val]);
     }
     const res = await conn.query('INSERT INTO classes (class_name, class_total_hours, class_difficulty) VALUES (?, ?, ?)', vals);
+    console.log(res);
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+  conn.end();
+  return 200;
+}
+
+// returns an array of JSON objects with all of the classes
+async function getUsers() {
+  const users = [];
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const dbRet = await conn.query('SELECT * FROM users');
+
+    // This is to return classes without meta information
+    // TODO: Find a simpler way
+    for (const elem of dbRet) {
+      users.push(elem);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  if (conn) {
+    conn.end();
+    return users;
+  }
+  return "Couldn't connect to the database";
+}
+
+// Accepts a JSON object and creates a class
+// TODO: Insert data on specified position when looping through the array.
+async function userPost(userJson) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    for (const val in userJson) {
+      vals.push(userJson[val]);
+    }
+    const res = await conn.query('INSERT INTO users (first_name, middle_name, last_name, \
+    phone_number, email) VALUES (?, ?, ?, ?, ?)', vals);
     console.log(res);
   } catch (err) {
     console.log(err);
@@ -84,6 +130,28 @@ app.route('/classes')
   .post((req, res) => {
     const classJson = (req.body);
     postClass(classJson)
+      .then((ret) => {
+        res.sendStatus(ret);
+      });
+  });
+
+// returns all classes
+app.route('/users')
+  .get((req, res) => {
+    getUsers()
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .post((req, res) => {
+    const userJson = (req.body);
+    userPost(userJson)
       .then((ret) => {
         res.sendStatus(ret);
       });
