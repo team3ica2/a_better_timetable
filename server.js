@@ -112,6 +112,50 @@ app.get('/', (req, res) => {
   });
 });
 
+// returns an array of JSON objects with all of the classes
+async function getStudents() {
+  const students = [];
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const dbRet = await conn.query('SELECT * FROM students');
+
+    // This is to return classes without meta information
+    // TODO: Find a simpler way
+    for (const elem of dbRet) {
+      students.push(elem);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  if (conn) {
+    conn.end();
+    return students;
+  }
+  return "Couldn't connect to the database";
+}
+
+// Accepts a JSON object and creates a class
+// TODO: Insert data on specified position when looping through the array.
+async function studentPost(studentJson) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    for (const val in studentJson) {
+      vals.push(studentJson[val]);
+    }
+    const res = await conn.query('INSERT INTO students (user_id, current_semester, programme_id, \
+    semester_tuition) VALUES (?, ?, ?, ?)', vals);
+    console.log(res);
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+  conn.end();
+  return 200;
+}
 
 // returns all classes
 app.route('/classes')
@@ -135,7 +179,7 @@ app.route('/classes')
       });
   });
 
-// returns all classes
+// returns all users
 app.route('/users')
   .get((req, res) => {
     getUsers()
@@ -152,6 +196,28 @@ app.route('/users')
   .post((req, res) => {
     const userJson = (req.body);
     userPost(userJson)
+      .then((ret) => {
+        res.sendStatus(ret);
+      });
+  });
+
+// returns all students
+app.route('/students')
+  .get((req, res) => {
+    getStudents()
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .post((req, res) => {
+    const studentJson = (req.body);
+    studentPost(studentJson)
       .then((ret) => {
         res.sendStatus(ret);
       });
