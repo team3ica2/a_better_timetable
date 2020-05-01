@@ -47,10 +47,12 @@ async function postClass(classJson) {
   try {
     conn = await pool.getConnection();
     const vals = [];
+    const keys = [];
     for (const val in classJson) {
+      keys.push(val);
       vals.push(classJson[val]);
     }
-    const res = await conn.query('INSERT INTO classes (class_name, class_total_hours, class_difficulty) VALUES (?, ?, ?)', vals);
+    const res = await conn.query(`INSERT INTO classes (${keys[0]}, ${keys[1]}, ${keys[2]}) VALUES (?, ?, ?)`, vals);
     console.log(res);
   } catch (err) {
     console.log(err);
@@ -91,11 +93,13 @@ async function userPost(userJson) {
   try {
     conn = await pool.getConnection();
     const vals = [];
+    const keys = [];
     for (const val in userJson) {
+      keys.push(val);
       vals.push(userJson[val]);
     }
-    const res = await conn.query('INSERT INTO users (first_name, middle_name, last_name, \
-    phone_number, email) VALUES (?, ?, ?, ?, ?)', vals);
+    const res = await conn.query(`INSERT INTO users (${keys[0]}, ${keys[1]}, ${keys[2]}, \
+    ${keys[3]}, ${keys[4]}) VALUES (?, ?, ?, ?, ?)`, vals);
     console.log(res);
   } catch (err) {
     console.log(err);
@@ -142,11 +146,13 @@ async function studentPost(studentJson) {
   try {
     conn = await pool.getConnection();
     const vals = [];
+    const keys = [];
     for (const val in studentJson) {
+      keys.push(val);
       vals.push(studentJson[val]);
     }
-    const res = await conn.query('INSERT INTO students (user_id, current_semester, programme_id, \
-    semester_tuition) VALUES (?, ?, ?, ?)', vals);
+    const res = await conn.query(`INSERT INTO students (${keys[0]}, ${keys[1]}, ${keys[2]}, \
+    ${keys[3]}) VALUES (?, ?, ?, ?)`, vals);
     console.log(res);
   } catch (err) {
     console.log(err);
