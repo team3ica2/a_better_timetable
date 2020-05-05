@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-// returns an array of JSON objects with all of the classes
+// returns an array of JSON objects
 async function getMany(tableName) {
   const info = [];
   let conn;
@@ -25,7 +25,7 @@ async function getMany(tableName) {
     conn = await pool.getConnection();
     const dbRet = await conn.query(`SELECT * FROM ${tableName}`);
 
-    // This is to return classes without meta information
+    // This is to return without meta information
     // TODO: Find a simpler way
     for (const elem of dbRet) {
       info.push(elem);
@@ -40,7 +40,7 @@ async function getMany(tableName) {
   return "Couldn't connect to the database";
 }
 
-// Accepts a JSON object and creates a class
+// Accepts a JSON object and creates a row
 // TODO: Insert data on specified position when looping through the array.
 async function postOne(infoJson, tableName) {
   let conn;
@@ -52,11 +52,11 @@ async function postOne(infoJson, tableName) {
       keys.push(val);
       vals.push(infoJson[val]);
     }
-    
+
     // Allowing random number of values -> this code seems pretty stupid
     let valStr = '(';
-    for (i = 0; i < Object.keys(infoJson).length - 1; i++) {
-      valStr += '?, '
+    for (let i = 0; i < Object.keys(infoJson).length - 1; i++) {
+      valStr += '?, ';
     }
     valStr += '?)';
     const res = await conn.query(`INSERT INTO ${tableName} (${keys}) VALUES ${valStr}`, vals);
@@ -70,19 +70,19 @@ async function postOne(infoJson, tableName) {
   return 200;
 }
 
+
+// finds one row based on the id
 async function findOne(classId, tableName) {
-  let class_info = [];
+  const classInfo = [];
   let conn;
   try {
     conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
     const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE class_id = ${classId}`);
 
     // This is to return classes without meta information
     // TODO: Find a simpler way
     for (const elem of dbRet) {
-      class_info.push(elem);
+      classInfo.push(elem);
     }
   } catch (err) {
     console.log(err);
@@ -90,16 +90,14 @@ async function findOne(classId, tableName) {
   }
 
   conn.end();
-  return class_info;
+  return classInfo;
 }
 
-//deletes all classes
+// deletes all rows
 async function deleteMany(tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
     const res = await conn.query(`DELETE FROM ${tableName}`);
     console.log(res);
   } catch (err) {
@@ -112,17 +110,16 @@ async function deleteMany(tableName) {
 }
 
 
-
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to PC_Timetable API',
   });
 });
 
-// returns all classes
 app.route('/classes')
+  // returns all classes
   .get((req, res) => {
-    routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     getMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -134,16 +131,19 @@ app.route('/classes')
         }
       });
   })
+
+  // posts one class
   .post((req, res) => {
-    routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     const classJson = (req.body);
     postOne(classJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
   })
+  // deletes all classes
   .delete((req, res) => {
-    routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     deleteMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -154,11 +154,15 @@ app.route('/classes')
           });
         }
       });
-  })
+  });
+
+
 app.route('/classes/:classId')
+  // returns one class based on id
+  // TODO return all applicable classes based on the provided parameter
   .get((req, res) => {
-    routeName= req.route['path'].split('/')[1]
-    findOne(req.params.classId, routeName)   
+    const routeName = req.route.path.split('/')[1];
+    findOne(req.params.classId, routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -168,13 +172,13 @@ app.route('/classes/:classId')
           });
         }
       });
-  })
+  });
 
 
-// returns all users
 app.route('/users')
+  // returns all users
   .get((req, res) => {
-   routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     getMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -186,16 +190,18 @@ app.route('/users')
         }
       });
   })
+  // posts one user
   .post((req, res) => {
-   routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     const userJson = (req.body);
     postOne(userJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
   })
+  // deletes all users
   .delete((req, res) => {
-   routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     deleteMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -206,12 +212,12 @@ app.route('/users')
           });
         }
       });
-  })
+  });
 
-// returns all students
 app.route('/students')
+  // returns all students
   .get((req, res) => {
-   routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     getMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -223,16 +229,18 @@ app.route('/students')
         }
       });
   })
+  // posts one student
   .post((req, res) => {
-   routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     const studentJson = (req.body);
     postOne(studentJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
   })
+  // deletes all students
   .delete((req, res) => {
-   routeName= req.route['path'].replace('/', '')
+    const routeName = req.route.path.replace('/', '');
     deleteMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -243,6 +251,6 @@ app.route('/students')
           });
         }
       });
-  })
+  });
 
 app.listen(port, () => console.log(`API listening on port ${port}!`));
