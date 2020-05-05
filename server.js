@@ -52,7 +52,14 @@ async function postOne(infoJson, tableName) {
       keys.push(val);
       vals.push(infoJson[val]);
     }
-    const res = await conn.query(`INSERT INTO ${tableName} (${keys[0]}, ${keys[1]}, ${keys[2]}) VALUES (?, ?, ?)`, vals);
+    
+    // Allowing random number of values -> this code seems pretty stupid
+    let valStr = '(';
+    for (i = 0; i < Object.keys(infoJson).length - 1; i++) {
+      valStr += '?, '
+    }
+    valStr += '?)';
+    const res = await conn.query(`INSERT INTO ${tableName} (${keys}) VALUES ${valStr}`, vals);
     console.log(res);
   } catch (err) {
     console.log(err);
