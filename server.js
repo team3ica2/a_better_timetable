@@ -297,4 +297,56 @@ app.route('/students')
       });
   });
 
+app.route('/teachers')
+// returns all teachers
+  .get((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    } else {
+      getMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    }
+  })
+// posts one teacher
+  .post((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const studentJson = (req.body);
+    postOne(studentJson, routeName)
+      .then((ret) => {
+        res.sendStatus(ret);
+      });
+  })
+// deletes all teachers
+  .delete((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    deleteMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  });
+
 app.listen(port, () => console.log(`API listening on port ${port}!`));
