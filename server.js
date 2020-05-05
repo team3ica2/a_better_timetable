@@ -41,7 +41,6 @@ async function getMany(tableName) {
 }
 
 // Accepts a JSON object and creates a row
-// TODO: Insert data on specified position when looping through the array.
 async function postOne(infoJson, tableName) {
   let conn;
   try {
