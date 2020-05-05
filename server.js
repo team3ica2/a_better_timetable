@@ -63,6 +63,25 @@ async function postClass(classJson) {
   return 200;
 }
 
+//deletes all classes
+async function deleteClasses() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    const keys = [];
+    const res = await conn.query('DELETE FROM classes');
+    console.log(res);
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+  conn.end();
+  return 200;
+}
+
+
 // returns an array of JSON objects with all of the classes
 async function getUsers() {
   const users = [];
@@ -110,11 +129,24 @@ async function userPost(userJson) {
   return 200;
 }
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Welcome to PC_Timetable API',
-  });
-});
+//deletes all users
+async function deleteUsers() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    const keys = [];
+    const res = await conn.query('DELETE FROM users');
+    console.log(res);
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+  conn.end();
+  return 200;
+}
+
 
 // returns an array of JSON objects with all of the classes
 async function getStudents() {
@@ -163,6 +195,29 @@ async function studentPost(studentJson) {
   return 200;
 }
 
+async function deleteStudents() {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    const keys = [];
+    const res = await conn.query('DELETE FROM students');
+    console.log(res);
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+  conn.end();
+  return 200;
+}
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Welcome to PC_Timetable API',
+  });
+});
+
 // returns all classes
 app.route('/classes')
   .get((req, res) => {
@@ -183,7 +238,19 @@ app.route('/classes')
       .then((ret) => {
         res.sendStatus(ret);
       });
-  });
+  })
+  .delete((req, res) => {
+    deleteClasses()
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 // returns all users
 app.route('/users')
@@ -205,7 +272,19 @@ app.route('/users')
       .then((ret) => {
         res.sendStatus(ret);
       });
-  });
+  })
+  .delete((req, res) => {
+    deleteUsers()
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 // returns all students
 app.route('/students')
@@ -227,6 +306,18 @@ app.route('/students')
       .then((ret) => {
         res.sendStatus(ret);
       });
-  });
+  })
+  .delete((req, res) => {
+    deleteStudents()
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 app.listen(port, () => console.log(`API listening on port ${port}!`));
