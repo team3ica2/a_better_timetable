@@ -19,25 +19,17 @@ app.use(bodyParser.json());
 
 // returns an array of JSON objects
 async function getMany(tableName) {
-  const info = [];
   let conn;
   try {
     conn = await pool.getConnection();
     const dbRet = await conn.query(`SELECT * FROM ${tableName}`);
+    conn.end();
+    return dbRet;
 
-    // This is to return without meta information
-    // TODO: Find a simpler way
-    for (const elem of dbRet) {
-      info.push(elem);
-    }
   } catch (err) {
     console.log(err);
+    return "Couldn't connect to the database";
   }
-  if (conn) {
-    conn.end();
-    return info;
-  }
-  return "Couldn't connect to the database";
 }
 
 // Accepts a JSON object and creates a row
@@ -60,15 +52,34 @@ async function postOne(infoJson, tableName) {
     valStr += '?)';
     const res = await conn.query(`INSERT INTO ${tableName} (${keys}) VALUES ${valStr}`, vals);
     console.log(res);
+    conn.end();
+    return 200;
   } catch (err) {
     console.log(err);
     return 400;
   }
 
-  conn.end();
-  return 200;
 }
 
+async function getQuery(queries, tableName) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    string = ''
+    queryLength = Object.keys(queries).length 
+    for (let val in queries) {
+      string += val + ' = ' + queries[val] + ' AND ';
+    }
+    string = string.substring(0, string.length - 5);
+    const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE ${string} `) 
+    conn.end();
+    return dbRet;
+  
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+}
 
 // finds one row based on the id
 async function findOne(classId, tableName) {
@@ -77,19 +88,13 @@ async function findOne(classId, tableName) {
   try {
     conn = await pool.getConnection();
     const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE class_id = ${classId}`);
+    conn.end();
+    return classInfo;
 
-    // This is to return classes without meta information
-    // TODO: Find a simpler way
-    for (const elem of dbRet) {
-      classInfo.push(elem);
-    }
   } catch (err) {
     console.log(err);
     return 400;
   }
-
-  conn.end();
-  return classInfo;
 }
 
 // deletes all rows
@@ -99,13 +104,13 @@ async function deleteMany(tableName) {
     conn = await pool.getConnection();
     const res = await conn.query(`DELETE FROM ${tableName}`);
     console.log(res);
+    conn.end();
+    return 200;
+
   } catch (err) {
     console.log(err);
     return 400;
   }
-
-  conn.end();
-  return 200;
 }
 
 
@@ -116,9 +121,22 @@ app.get('/', (req, res) => {
 });
 
 app.route('/classes')
-// returns all classes
+  // returns classes based on requests parameters
+  // or all classes if there are no parameters 
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    } else {
     getMany(routeName)
       .then((ret) => {
         if (ret) {
@@ -129,6 +147,7 @@ app.route('/classes')
           });
         }
       });
+    }
   })
 
 // posts one class
@@ -178,7 +197,8 @@ app.route('/users')
 // returns all users
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    getMany(routeName)
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -188,6 +208,18 @@ app.route('/users')
           });
         }
       });
+    } else {
+      getMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    }
   })
 // posts one user
   .post((req, res) => {
@@ -217,7 +249,8 @@ app.route('/students')
 // returns all students
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    getMany(routeName)
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -227,6 +260,18 @@ app.route('/students')
           });
         }
       });
+    } else {
+      getMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    }
   })
 // posts one student
   .post((req, res) => {
