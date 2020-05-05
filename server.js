@@ -18,41 +18,41 @@ app.use(bodyParser.json());
 
 
 // returns an array of JSON objects with all of the classes
-async function getClasses() {
-  const classes = [];
+async function getMany(tableName) {
+  const info = [];
   let conn;
   try {
     conn = await pool.getConnection();
-    const dbRet = await conn.query('SELECT * FROM classes');
+    const dbRet = await conn.query(`SELECT * FROM ${tableName}`);
 
     // This is to return classes without meta information
     // TODO: Find a simpler way
     for (const elem of dbRet) {
-      classes.push(elem);
+      info.push(elem);
     }
   } catch (err) {
     console.log(err);
   }
   if (conn) {
     conn.end();
-    return classes;
+    return info;
   }
   return "Couldn't connect to the database";
 }
 
 // Accepts a JSON object and creates a class
 // TODO: Insert data on specified position when looping through the array.
-async function postClass(classJson) {
+async function postOne(infoJson, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
     const vals = [];
     const keys = [];
-    for (const val in classJson) {
+    for (const val in infoJson) {
       keys.push(val);
-      vals.push(classJson[val]);
+      vals.push(infoJson[val]);
     }
-    const res = await conn.query(`INSERT INTO classes (${keys[0]}, ${keys[1]}, ${keys[2]}) VALUES (?, ?, ?)`, vals);
+    const res = await conn.query(`INSERT INTO ${tableName} (${keys[0]}, ${keys[1]}, ${keys[2]}) VALUES (?, ?, ?)`, vals);
     console.log(res);
   } catch (err) {
     console.log(err);
@@ -61,16 +61,39 @@ async function postClass(classJson) {
 
   conn.end();
   return 200;
+}
+
+async function findOne(classId, tableName) {
+  let class_info = [];
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    const keys = [];
+    const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE class_id = ${classId}`);
+
+    // This is to return classes without meta information
+    // TODO: Find a simpler way
+    for (const elem of dbRet) {
+      class_info.push(elem);
+    }
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+  conn.end();
+  return class_info;
 }
 
 //deletes all classes
-async function deleteClasses() {
+async function deleteMany(tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
     const vals = [];
     const keys = [];
-    const res = await conn.query('DELETE FROM classes');
+    const res = await conn.query(`DELETE FROM ${tableName}`);
     console.log(res);
   } catch (err) {
     console.log(err);
@@ -82,135 +105,6 @@ async function deleteClasses() {
 }
 
 
-// returns an array of JSON objects with all of the classes
-async function getUsers() {
-  const users = [];
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const dbRet = await conn.query('SELECT * FROM users');
-
-    // This is to return classes without meta information
-    // TODO: Find a simpler way
-    for (const elem of dbRet) {
-      users.push(elem);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  if (conn) {
-    conn.end();
-    return users;
-  }
-  return "Couldn't connect to the database";
-}
-
-// Accepts a JSON object and creates a class
-// TODO: Insert data on specified position when looping through the array.
-async function userPost(userJson) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
-    for (const val in userJson) {
-      keys.push(val);
-      vals.push(userJson[val]);
-    }
-    const res = await conn.query(`INSERT INTO users (${keys[0]}, ${keys[1]}, ${keys[2]}, \
-    ${keys[3]}, ${keys[4]}) VALUES (?, ?, ?, ?, ?)`, vals);
-    console.log(res);
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-
-  conn.end();
-  return 200;
-}
-
-//deletes all users
-async function deleteUsers() {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
-    const res = await conn.query('DELETE FROM users');
-    console.log(res);
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-
-  conn.end();
-  return 200;
-}
-
-
-// returns an array of JSON objects with all of the classes
-async function getStudents() {
-  const students = [];
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const dbRet = await conn.query('SELECT * FROM students');
-
-    // This is to return classes without meta information
-    // TODO: Find a simpler way
-    for (const elem of dbRet) {
-      students.push(elem);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  if (conn) {
-    conn.end();
-    return students;
-  }
-  return "Couldn't connect to the database";
-}
-
-// Accepts a JSON object and creates a class
-// TODO: Insert data on specified position when looping through the array.
-async function studentPost(studentJson) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
-    for (const val in studentJson) {
-      keys.push(val);
-      vals.push(studentJson[val]);
-    }
-    const res = await conn.query(`INSERT INTO students (${keys[0]}, ${keys[1]}, ${keys[2]}, \
-    ${keys[3]}) VALUES (?, ?, ?, ?)`, vals);
-    console.log(res);
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-
-  conn.end();
-  return 200;
-}
-
-async function deleteStudents() {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
-    const res = await conn.query('DELETE FROM students');
-    console.log(res);
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-
-  conn.end();
-  return 200;
-}
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -221,7 +115,8 @@ app.get('/', (req, res) => {
 // returns all classes
 app.route('/classes')
   .get((req, res) => {
-    getClasses()
+    routeName= req.route['path'].replace('/', '')
+    getMany(routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -233,14 +128,30 @@ app.route('/classes')
       });
   })
   .post((req, res) => {
+    routeName= req.route['path'].replace('/', '')
     const classJson = (req.body);
-    postClass(classJson)
+    postOne(classJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
   })
   .delete((req, res) => {
-    deleteClasses()
+    routeName= req.route['path'].replace('/', '')
+    deleteMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+app.route('/classes/:classId')
+  .get((req, res) => {
+    routeName= req.route['path'].split('/')[1]
+    findOne(req.params.classId, routeName)   
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -252,10 +163,12 @@ app.route('/classes')
       });
   })
 
+
 // returns all users
 app.route('/users')
   .get((req, res) => {
-    getUsers()
+   routeName= req.route['path'].replace('/', '')
+    getMany(routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -267,14 +180,16 @@ app.route('/users')
       });
   })
   .post((req, res) => {
+   routeName= req.route['path'].replace('/', '')
     const userJson = (req.body);
-    userPost(userJson)
+    postOne(userJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
   })
   .delete((req, res) => {
-    deleteUsers()
+   routeName= req.route['path'].replace('/', '')
+    deleteMany(routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -289,7 +204,8 @@ app.route('/users')
 // returns all students
 app.route('/students')
   .get((req, res) => {
-    getStudents()
+   routeName= req.route['path'].replace('/', '')
+    getMany(routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
@@ -301,14 +217,16 @@ app.route('/students')
       });
   })
   .post((req, res) => {
+   routeName= req.route['path'].replace('/', '')
     const studentJson = (req.body);
-    studentPost(studentJson)
+    postOne(studentJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
   })
   .delete((req, res) => {
-    deleteStudents()
+   routeName= req.route['path'].replace('/', '')
+    deleteMany(routeName)
       .then((ret) => {
         if (ret) {
           res.send(ret);
