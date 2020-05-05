@@ -117,7 +117,7 @@ app.get('/', (req, res) => {
 });
 
 app.route('/classes')
-  // returns all classes
+// returns all classes
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
     getMany(routeName)
@@ -132,7 +132,7 @@ app.route('/classes')
       });
   })
 
-  // posts one class
+// posts one class
   .post((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const classJson = (req.body);
@@ -141,7 +141,7 @@ app.route('/classes')
         res.sendStatus(ret);
       });
   })
-  // deletes all classes
+// deletes all classes
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
     deleteMany(routeName)
@@ -158,8 +158,8 @@ app.route('/classes')
 
 
 app.route('/classes/:classId')
-  // returns one class based on id
-  // TODO return all applicable classes based on the provided parameter
+// returns one class based on id
+// TODO return all applicable classes based on the provided parameter
   .get((req, res) => {
     const routeName = req.route.path.split('/')[1];
     findOne(req.params.classId, routeName)
@@ -176,7 +176,7 @@ app.route('/classes/:classId')
 
 
 app.route('/users')
-  // returns all users
+// returns all users
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
     getMany(routeName)
@@ -190,7 +190,7 @@ app.route('/users')
         }
       });
   })
-  // posts one user
+// posts one user
   .post((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const userJson = (req.body);
@@ -199,7 +199,7 @@ app.route('/users')
         res.sendStatus(ret);
       });
   })
-  // deletes all users
+// deletes all users
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
     deleteMany(routeName)
@@ -215,7 +215,7 @@ app.route('/users')
   });
 
 app.route('/students')
-  // returns all students
+// returns all students
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
     getMany(routeName)
@@ -229,7 +229,7 @@ app.route('/students')
         }
       });
   })
-  // posts one student
+// posts one student
   .post((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const studentJson = (req.body);
@@ -238,7 +238,7 @@ app.route('/students')
         res.sendStatus(ret);
       });
   })
-  // deletes all students
+// deletes all students
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
     deleteMany(routeName)
