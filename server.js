@@ -61,12 +61,43 @@ async function postOne(infoJson, tableName) {
 
 }
 
+// Update a row
+async function updateOne(infoJson, queries, tableName) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const vals = [];
+    var queryString = '';
+    for (const val in infoJson) {
+      vals.push(infoJson[val]);
+    }
+    for (let val in queries) {
+      queryString += val + '=' + queries[val] + ' AND ';
+    }
+    // Allowing random number of values -> this code seems pretty stupid
+    let valStr = '';
+    for (let value in infoJson) {
+      valStr += value + '='
+      valStr += '?, ';
+    }
+    valStr = valStr.substring(0, valStr.length - 2);
+    queryString = queryString.substring(0, queryString.length - 5);
+    const res = await conn.query(`UPDATE ${tableName} SET ${valStr} WHERE ${queryString}`, vals);
+    console.log(res);
+    conn.end();
+    return 200;
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+
+}
+
 async function getQuery(queries, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
     string = ''
-    queryLength = Object.keys(queries).length 
     for (let val in queries) {
       string += val + ' = ' + queries[val] + ' AND ';
     }
@@ -74,7 +105,7 @@ async function getQuery(queries, tableName) {
     const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE ${string} `) 
     conn.end();
     return dbRet;
-  
+
   } catch (err) {
     console.log(err);
     return 400;
@@ -114,6 +145,7 @@ async function deleteMany(tableName) {
 }
 
 
+//TODO patch and put act the same way for now
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to PC_Timetable API',
@@ -153,8 +185,8 @@ app.route('/classes')
 // posts one class
   .post((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    const classJson = (req.body);
-    postOne(classJson, routeName)
+    const infoJson = req.body;
+    postOne(infoJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
@@ -172,7 +204,37 @@ app.route('/classes')
           });
         }
       });
-  });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 
 app.route('/classes/:classId')
@@ -243,7 +305,37 @@ app.route('/users')
           });
         }
       });
-  });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 app.route('/students')
 // returns all students
@@ -295,7 +387,37 @@ app.route('/students')
           });
         }
       });
-  });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 app.route('/teachers')
 // returns all teachers
@@ -347,6 +469,37 @@ app.route('/teachers')
           });
         }
       });
-  });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+
 
 app.listen(port, () => console.log(`API listening on port ${port}!`));
