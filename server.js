@@ -97,7 +97,7 @@ async function getQuery(queries, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
-    string = ''
+    var string = ''
     for (let val in queries) {
       string += val + ' = ' + queries[val] + ' AND ';
     }
@@ -114,13 +114,12 @@ async function getQuery(queries, tableName) {
 
 // finds one row based on the id
 async function findOne(classId, tableName) {
-  const classInfo = [];
   let conn;
   try {
     conn = await pool.getConnection();
     const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE class_id = ${classId}`);
     conn.end();
-    return classInfo;
+    return dbRet;
 
   } catch (err) {
     console.log(err);
@@ -153,32 +152,32 @@ app.get('/', (req, res) => {
 });
 
 app.route('/classes')
-  // returns classes based on requests parameters
-  // or all classes if there are no parameters
+// returns classes based on requests parameters
+// or all classes if there are no parameters
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
-    getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+      getMany(routeName)
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 
@@ -261,26 +260,26 @@ app.route('/users')
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
       getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 // posts one user
@@ -343,26 +342,26 @@ app.route('/students')
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
       getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 // posts one student
@@ -425,26 +424,26 @@ app.route('/teachers')
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
       getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 // posts one teacher
@@ -507,26 +506,26 @@ app.route('/classes_taken')
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
       getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 // posts one class_taken row
@@ -589,26 +588,26 @@ app.route('/classes_taught')
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
       getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 // posts one classes_taught row
@@ -671,26 +670,26 @@ app.route('/classes_time')
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
       getQuery(req.query, routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     } else {
       getMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
 // posts one classes_time row
