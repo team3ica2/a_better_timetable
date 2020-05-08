@@ -102,7 +102,7 @@ async function getQuery(queries, tableName) {
       string += val + ' = ' + queries[val] + ' AND ';
     }
     string = string.substring(0, string.length - 5);
-    const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE ${string} `) 
+    const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE ${string} `)
     conn.end();
     return dbRet;
 
@@ -154,7 +154,7 @@ app.get('/', (req, res) => {
 
 app.route('/classes')
   // returns classes based on requests parameters
-  // or all classes if there are no parameters 
+  // or all classes if there are no parameters
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
@@ -501,5 +501,250 @@ app.route('/teachers')
       });
   })
 
+app.route('/classes_taken')
+// returns all classes_taken
+  .get((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    } else {
+      getMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    }
+  })
+// posts one class_taken row
+  .post((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const studentJson = (req.body);
+    postOne(studentJson, routeName)
+      .then((ret) => {
+        res.sendStatus(ret);
+      });
+  })
+// deletes all classes_taken
+  .delete((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    deleteMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+
+app.route('/classes_taught')
+// returns all classes_taught
+  .get((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    } else {
+      getMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    }
+  })
+// posts one classes_taught row
+  .post((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const studentJson = (req.body);
+    postOne(studentJson, routeName)
+      .then((ret) => {
+        res.sendStatus(ret);
+      });
+  })
+// deletes all classes_taught
+  .delete((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    deleteMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+
+app.route('/classes_time')
+// returns all classes_time
+  .get((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    if (Object.keys(req.query).length !== 0) {
+      getQuery(req.query, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    } else {
+      getMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    }
+  })
+// posts one classes_time row
+  .post((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const studentJson = (req.body);
+    postOne(studentJson, routeName)
+      .then((ret) => {
+        res.sendStatus(ret);
+      });
+  })
+// deletes all classes_time
+  .delete((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    deleteMany(routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .put((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
+  .patch((req, res) => {
+    const routeName = req.route.path.replace('/', '');
+    const infoJson = req.body;
+    const queries = req.query;
+    updateOne(infoJson, queries, routeName)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+  })
 
 app.listen(port, () => console.log(`API listening on port ${port}!`));
