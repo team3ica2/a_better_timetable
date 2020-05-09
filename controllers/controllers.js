@@ -10,7 +10,7 @@ const pool = mariadb.createPool({
 
 module.exports = {
 // returns an array of JSON objects
-  getMany: async function getMany(tableName) {
+  getMany: async function(tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -25,7 +25,7 @@ module.exports = {
 },
 
 // Accepts a JSON object and creates a row
-  postOne: async function postOne(infoJson, tableName) {
+  postOne: async function(infoJson, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -54,7 +54,7 @@ module.exports = {
 },
 
 // Update a row
-  updateOne: async function updateOne(infoJson, queries, tableName) {
+  updateOne: async function(infoJson, queries, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -85,7 +85,7 @@ module.exports = {
 
 },
 
-  getQuery: async function getQuery(queries, tableName) {
+  getQuery: async function(queries, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -105,7 +105,7 @@ module.exports = {
 },
 
 // finds one row based on the id
-  findOne: async function findOne(classId, tableName) {
+  findOne: async function(classId, tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
@@ -120,7 +120,7 @@ module.exports = {
 },
 
 // deletes all rows
-  deleteMany: async function deleteMany(tableName) {
+  deleteMany: async function(tableName) {
   let conn;
   try {
     conn = await pool.getConnection();
