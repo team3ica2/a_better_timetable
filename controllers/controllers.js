@@ -104,21 +104,6 @@ module.exports = {
   }
 },
 
-// finds one row based on the id
-  findOne: async function(classId, tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE class_id = ${classId}`);
-    conn.end();
-    return dbRet;
-
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-},
-
 // deletes all rows
   deleteMany: async function(tableName) {
   let conn;
@@ -133,5 +118,21 @@ module.exports = {
     console.log(err);
     return 400;
   }
+},
+
+  getStudentsTimetable: async function(studentId) {
+    let conn;
+    let vals = [];
+    vals.push(studentId);
+    try {
+      conn = await pool.getConnection();
+      const dbRet = await conn.query(`select t.class_day, t.start_time, t.end_time, t.room from students s join programme_classes p on s.programme_id=p.programme_id join classes_time t on p.class_id=t.class_id where s.current_semester=p.semester_id and s.student_id=?`, vals);
+      conn.end();
+      return dbRet;
+
+    } catch (err) {
+      console.log(err);
+      return "Couldn't connect to the database";
+    }
 },
 }
