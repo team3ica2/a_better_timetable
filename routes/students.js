@@ -82,4 +82,20 @@ router.route('/students')
         }
       });
   })
+
+router.route('/students/:studentsId/timetable')
+  .get((req, res) => {
+    controllers.getStudentsTimetable(req.params.studentsId)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    
+  })
+
 module.exports = router;
