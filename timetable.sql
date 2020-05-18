@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `timetable` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `timetable`;
--- MySQL dump 10.13  Distrib 5.7.29, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.30, for Linux (x86_64)
 --
--- Host: localhost    Database: timetable
+-- Host: 172.31.0.3    Database: timetable
 -- ------------------------------------------------------
--- Server version	5.7.29-0ubuntu0.18.04.1
+-- Server version	5.5.5-10.4.12-MariaDB-1:10.4.12+maria~bionic
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,17 +29,8 @@ CREATE TABLE `classes` (
   `class_difficulty` int(11) DEFAULT NULL,
   PRIMARY KEY (`class_id`),
   UNIQUE KEY `class_id_UNIQUE` (`class_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `classes`
---
-
-LOCK TABLES `classes` WRITE;
-/*!40000 ALTER TABLE `classes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `classes` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `classes_taken`
@@ -63,15 +52,6 @@ CREATE TABLE `classes_taken` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `classes_taken`
---
-
-LOCK TABLES `classes_taken` WRITE;
-/*!40000 ALTER TABLE `classes_taken` DISABLE KEYS */;
-/*!40000 ALTER TABLE `classes_taken` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `classes_taught`
 --
 
@@ -89,15 +69,6 @@ CREATE TABLE `classes_taught` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `classes_taught`
---
-
-LOCK TABLES `classes_taught` WRITE;
-/*!40000 ALTER TABLE `classes_taught` DISABLE KEYS */;
-/*!40000 ALTER TABLE `classes_taught` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `classes_time`
 --
 
@@ -108,24 +79,49 @@ CREATE TABLE `classes_time` (
   `nth_class_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_id` int(11) DEFAULT NULL,
   `class_day` date DEFAULT NULL,
-  `start_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
   `room` int(11) DEFAULT NULL,
   PRIMARY KEY (`nth_class_id`),
   UNIQUE KEY `nth_class_id_UNIQUE` (`nth_class_id`),
   KEY `class_id` (`class_id`),
   CONSTRAINT `class_id` FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `programme_classes`
+--
+
+DROP TABLE IF EXISTS `programme_classes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `programme_classes` (
+  `programme_id` int(11) NOT NULL,
+  `class_id` int(11) NOT NULL,
+  `semester_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`programme_id`,`class_id`),
+  KEY `fk_programme_classes_1_idx` (`programme_id`),
+  KEY `fk_programme_classes_2_idx` (`class_id`),
+  CONSTRAINT `fk_programme_classes_1` FOREIGN KEY (`programme_id`) REFERENCES `programmes` (`programme_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_programme_classes_2` FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `classes_time`
+-- Table structure for table `programmes`
 --
 
-LOCK TABLES `classes_time` WRITE;
-/*!40000 ALTER TABLE `classes_time` DISABLE KEYS */;
-/*!40000 ALTER TABLE `classes_time` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `programmes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `programmes` (
+  `programme_id` int(11) NOT NULL AUTO_INCREMENT,
+  `programme_name` varchar(45) DEFAULT NULL,
+  `programme_type` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`programme_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `students`
@@ -142,18 +138,11 @@ CREATE TABLE `students` (
   `semester_tuition` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`student_id`),
   KEY `user_id_idx` (`user_id`),
+  KEY `fk_students_1_idx` (`programme_id`),
+  CONSTRAINT `fk_students_1` FOREIGN KEY (`programme_id`) REFERENCES `programmes` (`programme_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_id_students` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `students`
---
-
-LOCK TABLES `students` WRITE;
-/*!40000 ALTER TABLE `students` DISABLE KEYS */;
-/*!40000 ALTER TABLE `students` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `teachers`
@@ -168,17 +157,8 @@ CREATE TABLE `teachers` (
   PRIMARY KEY (`teacher_id`),
   KEY `user_id_idx` (`user_id`),
   CONSTRAINT `user_id_teachers` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `teachers`
---
-
-LOCK TABLES `teachers` WRITE;
-/*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -196,17 +176,8 @@ CREATE TABLE `users` (
   `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=432 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -217,4 +188,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-26 15:32:04
+-- Dump completed on 2020-05-17 15:45:53
