@@ -1,13 +1,30 @@
 <%- include('./partials/header'); -%>
 <div class="container-fluid">
   <h1 class="mt-4">Users</h1>
-  <p>Returns all <a href="/users">users</a> from the database in the JSON format</p>
+  <h4>Get requests</h4>
+  <p>Example get request that returns all users in a JSON format:</p>
+  <pre>
+    <code>
+     curl 'http://35.234.67.178/users'
+    </code>
+  </pre>
+  <h4>Post requests</h4>
+  <p>Example post request that inserts a new user into the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request POST \
+      --data '{"first_name": "Joe", "middle_name": "Jack", "last_name": "Doe",
+               "phone_number": 789456123, "email": "Joe@doe.test"}' \
+      http://35.234.67.178/users
+    </code>
+  </pre>
   <p>A query can be performed to return a specific user</p>
-   <h5>Example query:</h5>
-   <pre>
+  <h5>Example query:</h5>
+  <pre>
      <code>
-       35.234.67.178/users?user_id=10
+          curl 'http://35.234.67.178/users?user_id=2'
      </code>
-   </pre>
+  </pre>
 </div>
 <%- include('./partials/sidebar'); -%>

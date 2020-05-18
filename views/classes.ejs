@@ -1,12 +1,29 @@
 <%- include('./partials/header'); -%>
 <div class="container-fluid">
   <h1 class="mt-4">Classes</h1>
-  <p>Returns all <a href="/classes">classes</a> from the database in the JSON format</p>
-  <p>A query can be performed to return a specific class</p>
-  <h5>Example query:</h5>
+  <h4>Get requests</h4>
+  <p>Example get request that returns all classes in a JSON format:</p>
   <pre>
     <code>
-     35.234.67.178/classes?class_id=2
+     curl 'http://35.234.67.178/classes'
+    </code>
+  </pre>
+  <h4>Post requests</h4>
+  <p>Example post request that inserts a new class into the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request POST \
+      --data '{"class_name":"WDD","class_total_hours":6, "class_difficulty": 10}' \
+      http://35.234.67.178/classes
+    </code>
+  </pre>
+  <h4>Queries</h4>
+  <p>A query can be performed to return a specific class</p>
+  <p>Example query:</p>
+  <pre>
+    <code>
+     curl 'http://35.234.67.178/classes?class_id=2'
     </code>
   </pre>
 
