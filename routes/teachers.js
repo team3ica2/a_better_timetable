@@ -82,4 +82,20 @@ router.route('/teachers')
         }
       });
   })
+
+router.route('/teachers/:teacherId/timetable')
+  .get((req, res) => {
+    controllers.getTeacherTimetable(req.params.teacherId)
+      .then((ret) => {
+        if (ret) {
+          res.send(ret);
+        } else {
+          res.status(400).json({
+            message: 'There was an error processing your request',
+          });
+        }
+      });
+    
+  })
+
 module.exports = router;

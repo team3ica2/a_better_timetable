@@ -7,6 +7,13 @@ body {
   overflow-x: hidden;
 }
 
+pre code {
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  width: 430px;
+}
+
 #sidebar-wrapper {
   min-height: 100vh;
   margin-left: -15rem;

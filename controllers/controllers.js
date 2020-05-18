@@ -135,4 +135,20 @@ module.exports = {
       return "Couldn't connect to the database";
     }
 },
+
+  getTeacherTimetable: async function(teacherId) {
+    let conn;
+    let vals = [];
+    vals.push(teacherId);
+    try {
+      conn = await pool.getConnection();
+      const dbRet = await conn.query(`select c.class_name, time.class_day, time.start_time, time.end_time, time.room from classes_taught t join classes_time time on t.class_id=time.class_id join classes c on t.class_id=c.class_id where t.teacher_id=?`, vals);
+      conn.end();
+      return dbRet;
+
+    } catch (err) {
+      console.log(err);
+      return "Couldn't connect to the database";
+    }
+},
 }
