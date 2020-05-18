@@ -38,20 +38,36 @@ router.route('/users')
         res.sendStatus(ret);
       });
   })
-// deletes all users
+
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    controllers.deleteMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+    // deletes one users
+    if (Object.keys(req.query).length !== 0) {
+      controllers.deleteOne(req.query, routeName)
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
+      // deletes all users
+    } else {
+      controllers.deleteMany(routeName)
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
+    }
   })
+
   .put((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const infoJson = req.body;

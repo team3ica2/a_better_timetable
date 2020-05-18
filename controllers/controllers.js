@@ -119,6 +119,29 @@ module.exports = {
     return 400;
   }
 },
+  
+// deletes one row
+  deleteOne: async function(queries, tableName) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+        const vals = [];
+    var queryString = '';
+    for (let val in queries) {
+      queryString += val + '=' + '?' + ' AND ';
+      vals.push(queries[val]);
+    }
+    queryString = queryString.substring(0, queryString.length - 5);
+    const res = await conn.query(`DELETE FROM ${tableName} WHERE ${queryString}`, vals);
+    console.log(res);
+    conn.end();
+    return 200;
+
+  } catch (err) {
+    console.log(err);
+    return 400;
+  }
+},
 
   getStudentsTimetable: async function(studentId) {
     let conn;

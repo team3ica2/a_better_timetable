@@ -38,19 +38,33 @@ router.route('/classes_taken')
         res.sendStatus(ret);
       });
   })
-// deletes all classes_taken
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    controllers.deleteMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+    // deletes one row
+    if (Object.keys(req.query).length !== 0) {
+      controllers.deleteOne(req.query, routeName)
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
+      // deletes all rows
+    } else {
+      controllers.deleteMany(routeName)
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
+    }
   })
   .put((req, res) => {
     const routeName = req.route.path.replace('/', '');

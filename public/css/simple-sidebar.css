@@ -11,7 +11,11 @@ pre code {
   background-color: #eee;
   border: 1px solid #999;
   display: block;
-  width: 430px;
+  width: 700px;
+}
+
+h1 {
+  padding-bottom: 50px;
 }
 
 #sidebar-wrapper {
