@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const ejs = require("ejs");
 const app = express();
 const usersRoute = require('./routes/users');
 const classesRoute = require('./routes/classes');
@@ -20,13 +21,45 @@ app.use(teachersRoute);
 app.use(classes_takenRoute);
 app.use(classes_taughtRoute);
 app.use(classes_timeRoute);
+app.use(express.static('public'))
+app.set('view engine', 'ejs');
 
 
 //TODO patch and put act the same way for now
 app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Welcome to PC_Timetable API',
-  });
+  res.redirect('/docs');
+});
+
+app.get('/docs', (req, res) => {
+    res.render('docs');
+});
+
+app.get('/docs/classes', (req, res) => {
+    res.render('classes');
+});
+
+app.get('/docs/users', (req, res) => {
+    res.render('users');
+});
+
+app.get('/docs/students', (req, res) => {
+    res.render('students');
+});
+
+app.get('/docs/teachers', (req, res) => {
+    res.render('teachers');
+});
+
+app.get('/docs/classes_time', (req, res) => {
+    res.render('classes_time');
+});
+
+app.get('/docs/classes_taken', (req, res) => {
+    res.render('classes_taken');
+});
+
+app.get('/docs/classes_taught', (req, res) => {
+    res.render('classes_taught');
 });
 
 app.listen(port, () => console.log(`API listening on port ${port}!`));
