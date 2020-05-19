@@ -1,14 +1,21 @@
 <%- include('./partials/header'); -%>
 <div class="container-fluid">
   <h1 class="mt-4"><a href="/classes_time">Classes Time</a></h1>
-    <h4>Get requests</h4>
+  <h2>Get requests</h2>
   <p>Example get request that returns all classes times in a JSON format:</p>
   <pre>
     <code>
      curl 'http://35.234.67.178/classes_time'
     </code>
   </pre>
-  <h4>Post requests</h4>
+  <p>A query can be performed to return a specific class time</p>
+  <p>Example query:</p>
+  <pre>
+    <code>
+     curl 'http://35.234.67.178/classes_time?class_id=5'
+    </code>
+  </pre>
+  <h2>Post requests</h2>
   <p>Example post request that inserts a new class time into the database:</p>
   <pre>
     <code>
@@ -17,14 +24,6 @@
       --data '{"class_id": 2,"class_day": "2020-04-10", "start_time": "12:00", 
                "end_time": "14:00", "room": 204}' \
       http://35.234.67.178/classes_time
-    </code>
-  </pre>
-  <h4>Queries</h4>
-  <p>A query can be performed to return a specific class time</p>
-  <p>Example query:</p>
-  <pre>
-    <code>
-     curl 'http://35.234.67.178/classes_time?class_id=5'
     </code>
   </pre>
 </div>

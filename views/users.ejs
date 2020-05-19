@@ -1,14 +1,21 @@
 <%- include('./partials/header'); -%>
 <div class="container-fluid">
   <h1 class="mt-4"><a href="/users">Users</a></h1>
-  <h4>Get requests</h4>
+  <h2>Get requests</h2>
   <p>Example get request that returns all users in a JSON format:</p>
   <pre>
     <code>
      curl 'http://35.234.67.178/users'
     </code>
   </pre>
-  <h4>Post requests</h4>
+  <p>A query can be performed to return a specific user</p>
+  <h5>Example query:</h5>
+  <pre>
+     <code>
+          curl 'http://35.234.67.178/users?user_id=2'
+     </code>
+  </pre>
+  <h2>Post requests</h2>
   <p>Example post request that inserts a new user into the database:</p>
   <pre>
     <code>
@@ -18,13 +25,6 @@
                "phone_number": 789456123, "email": "Joe@doe.test"}' \
       http://35.234.67.178/users
     </code>
-  </pre>
-  <p>A query can be performed to return a specific user</p>
-  <h5>Example query:</h5>
-  <pre>
-     <code>
-          curl 'http://35.234.67.178/users?user_id=2'
-     </code>
   </pre>
 </div>
 <%- include('./partials/sidebar'); -%>

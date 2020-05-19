@@ -1,28 +1,29 @@
 <%- include('./partials/header'); -%>
 <div class="container-fluid">
   <h1 class="mt-4"><a href="/classes_taken">Classes Taken</a></h1>
-    <p>Example get request that returns all classes taken in a JSON format:</p>
+  <h2>Get requests</h2>
+  <p>Example get request that returns all classes taken in a JSON format:</p>
   <pre>
     <code>
      curl 'http://35.234.67.178/classes_taken'
     </code>
   </pre>
-  <h4>Post requests</h4>
-  <p>Example post request that inserts a new class taken into the database:</p>
-  <pre>
-    <code>
-      curl --header "Content-Type: application/json" \
-      --request POST \
-      --data '{"class_id": 4, "student_id": 7, "semester": 2001, "final_score": 100}' \
-      http://localhost:3000/classes_taken
-    </code>
-  </pre>
-  <h4>Queries</h4>
   <p>A query can be performed to return a specific class taken</p>
   <p>Example query:</p>
   <pre>
     <code>
      curl 'http://35.234.67.178/classes_taken?class_id=5'
+    </code>
+  </pre>
+  <h2>Post requests</h2>
+  <p>Example post request that inserts a new class taken into the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request POST \
+      --data '{"class_id": 4, "student_id": 7, "semester": 2001,
+               "final_score": 100}' \
+      http://localhost:3000/classes_taken
     </code>
   </pre>
 </div>
