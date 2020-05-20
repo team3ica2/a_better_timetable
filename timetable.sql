@@ -16,6 +16,24 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `attendance`
+--
+
+DROP TABLE IF EXISTS `attendance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `attendance` (
+  `nth_class_id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `attended` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`nth_class_id`,`student_id`),
+  KEY `fk_attendance_2_idx` (`student_id`),
+  CONSTRAINT `fk_attendance_1` FOREIGN KEY (`nth_class_id`) REFERENCES `classes_time` (`nth_class_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_attendance_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `classes`
 --
 
@@ -29,26 +47,7 @@ CREATE TABLE `classes` (
   `class_difficulty` int(11) DEFAULT NULL,
   PRIMARY KEY (`class_id`),
   UNIQUE KEY `class_id_UNIQUE` (`class_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `classes_taken`
---
-
-DROP TABLE IF EXISTS `classes_taken`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `classes_taken` (
-  `class_id` int(11) NOT NULL,
-  `student_id` int(11) NOT NULL,
-  `semester` int(11) DEFAULT NULL,
-  `final_score` int(11) DEFAULT NULL,
-  PRIMARY KEY (`class_id`,`student_id`),
-  KEY `fk_classes_taken_2_idx` (`student_id`),
-  CONSTRAINT `fk_classes_taken_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_classes_taken_2` FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +85,7 @@ CREATE TABLE `classes_time` (
   UNIQUE KEY `nth_class_id_UNIQUE` (`nth_class_id`),
   KEY `class_id` (`class_id`),
   CONSTRAINT `class_id` FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +140,7 @@ CREATE TABLE `students` (
   KEY `fk_students_1_idx` (`programme_id`),
   CONSTRAINT `fk_students_1` FOREIGN KEY (`programme_id`) REFERENCES `programmes` (`programme_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `user_id_students` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +156,7 @@ CREATE TABLE `teachers` (
   PRIMARY KEY (`teacher_id`),
   KEY `user_id_idx` (`user_id`),
   CONSTRAINT `user_id_teachers` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,7 +175,7 @@ CREATE TABLE `users` (
   `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=432 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=433 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -188,4 +187,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-17 15:45:53
+-- Dump completed on 2020-05-19 17:29:37
