@@ -25,6 +25,42 @@
       http://35.234.67.178/classes
     </code>
   </pre>
-
+  <h2>Delete requests</h2>
+  <p>Example delete request that deletes one class from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/classes\?class_id=7
+    </code>
+  </pre>
+  <p>Example delete request that deletes all of the classes from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/classes
+    </code>
+  </pre>
+  <h2>Put requests</h2>
+  <p>Example put request that updates all fields of a class in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PUT \
+      --data '{"class_name":"WDD","class_total_hours":10, "class_difficulty": 5}' \
+      http://35.234.67.178/classes\?class_id=2
+    </code>
+  </pre>
+  <h2>Patch requests</h2>
+  <p>Example patch request that updates some fields of a class in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PATCH \
+      --data '{"class_name":"SSS1"}' \
+      http://35.234.67.178/classes\?class_id=5
+    </code>
+  </pre>
 </div>
 <%- include('./partials/sidebar'); -%>

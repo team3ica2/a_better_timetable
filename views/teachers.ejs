@@ -28,5 +28,42 @@
       http://35.234.67.178/teachers
     </code>
   </pre>
+  <h2>Delete requests</h2>
+  <p>Example delete request that deletes one teacher from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/teachers\?teacher_id=7
+    </code>
+  </pre>
+  <p>Example delete request that deletes all of the teachers from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/teachers
+    </code>
+  </pre>
+  <h2>Put requests</h2>
+  <p>Example put request that updates all fields of a teacher in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PUT \
+      --data '{"teacher_id": 2, "user_id": 4}' \
+      http://35.234.67.178/teachers\?teacher_id=2
+    </code>
+  </pre>
+  <h2>Patch requests</h2>
+  <p>Example patch request that updates some fields of a teacher in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PATCH \
+      --data '{"user_id": 2}' \
+      http://35.234.67.178/teachers\?teacher_id=5
+    </code>
+  </pre>
 </div>
 <%- include('./partials/sidebar'); -%>

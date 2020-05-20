@@ -26,5 +26,43 @@
       http://35.234.67.178/classes_time
     </code>
   </pre>
+  <h2>Delete requests</h2>
+  <p>Example delete request that deletes one class time from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/classes_time\?class_id=7
+    </code>
+  </pre>
+  <p>Example delete request that deletes all of the classes times from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/classes_time
+    </code>
+  </pre>
+  <h2>Put requests</h2>
+  <p>Example put request that updates all fields of a class time in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PUT \
+      --data '{"class_id": 4,"class_day": "2020-09-10", "start_time": "13:00", 
+               "end_time": "15:00", "room": 201}' \
+      http://35.234.67.178/classes_time\?class_id=2
+    </code>
+  </pre>
+  <h2>Patch requests</h2>
+  <p>Example patch request that updates some fields of a classe time in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PATCH \
+      --data '{"start_time": "13:00"}' \
+      http://35.234.67.178/classes_time\?class_id=5
+    </code>
+  </pre>
 </div>
 <%- include('./partials/sidebar'); -%>

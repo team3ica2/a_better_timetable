@@ -26,5 +26,43 @@
       http://35.234.67.178/users
     </code>
   </pre>
+  <h2>Delete requests</h2>
+  <p>Example delete request that deletes one user from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/users\?user_id=7
+    </code>
+  </pre>
+  <p>Example delete request that deletes all of the users from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/users
+    </code>
+  </pre>
+  <h2>Put requests</h2>
+  <p>Example put request that updates all fields of a user in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PUT \
+      --data '{"first_name": "Jack", "middle_name": "Joe", "last_name": "Doe",
+               "phone_number": 789456123, "email": "Jack@doe.test"}' \
+      http://35.234.67.178/users\?user_id=2
+    </code>
+  </pre>
+  <h2>Patch requests</h2>
+  <p>Example patch request that updates some fields of a user in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PATCH \
+      --data '{"first_name":"John"}' \
+      http://35.234.67.178/users\?user_id=4
+    </code>
+  </pre>
 </div>
 <%- include('./partials/sidebar'); -%>

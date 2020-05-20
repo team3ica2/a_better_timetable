@@ -25,5 +25,42 @@
       http://localhost:3000/classes_taught
     </code>
   </pre>
+  <h2>Delete requests</h2>
+  <p>Example delete request that deletes one class taught from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/classes_taught\?class_id=7
+    </code>
+  </pre>
+  <p>Example delete request that deletes all of the classes taught from the database:</p>
+  <pre>
+    <code>
+      curl \
+      --request DELETE \
+      http://35.234.67.178/classes_taught
+    </code>
+  </pre>
+  <h2>Put requests</h2>
+  <p>Example put request that updates all fields of a class taught in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PUT \
+      --data '{"class_id": 7, "teacher_id": 3}' \
+      http://35.234.67.178/classes_taught\?class_id=2
+    </code>
+  </pre>
+  <h2>Patch requests</h2>
+  <p>Example patch request that updates some fields of a class taught in the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request PATCH \
+      --data '{"teacher_id": 4}' \
+      http://35.234.67.178/classes_taught\?class_id=2
+    </code>
+  </pre>
 </div>
 <%- include('./partials/sidebar'); -%>
