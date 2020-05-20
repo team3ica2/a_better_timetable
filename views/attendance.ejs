@@ -1,0 +1,29 @@
+<%- include('./partials/header'); -%>
+<div class="container-fluid">
+  <h1 class="mt-4"><a href="/attendance">Attendance</a></h1>
+  <h2>Get requests</h2>
+  <p>Example get request that returns attendance for all in a JSON format:</p>
+  <pre>
+    <code>
+     curl 'http://35.234.67.178/attendance'
+    </code>
+  </pre>
+  <p>A query can be performed to return attendance for a specific student</p>
+  <p>Example query:</p>
+  <pre>
+    <code>
+     curl 'http://35.234.67.178/attendance?student_id=5'
+    </code>
+  </pre>
+  <h2>Post requests</h2>
+  <p>Example post request that inserts new attendance entry into the database:</p>
+  <pre>
+    <code>
+      curl --header "Content-Type: application/json" \
+      --request POST \
+      --data '{"nth_class_id": 4, "student_id": 7, "attended": 1}' \
+      http://localhost:3000/attendance
+    </code>
+  </pre>
+</div>
+<%- include('./partials/sidebar'); -%>

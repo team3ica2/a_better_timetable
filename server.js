@@ -7,7 +7,7 @@ const usersRoute = require('./routes/users');
 const classesRoute = require('./routes/classes');
 const studentsRoute = require('./routes/students');
 const teachersRoute = require('./routes/teachers');
-const classes_takenRoute = require('./routes/classes_taken');
+const attendanceRoute = require('./routes/attendance');
 const classes_taughtRoute = require('./routes/classes_taught');
 const classes_timeRoute = require('./routes/classes_time');
 const port = 3000;
@@ -18,7 +18,7 @@ app.use(usersRoute);
 app.use(studentsRoute);
 app.use(classesRoute);
 app.use(teachersRoute);
-app.use(classes_takenRoute);
+app.use(attendanceRoute);
 app.use(classes_taughtRoute);
 app.use(classes_timeRoute);
 app.use(express.static('public'))
@@ -54,8 +54,8 @@ app.get('/docs/classes_time', (req, res) => {
     res.render('classes_time');
 });
 
-app.get('/docs/classes_taken', (req, res) => {
-    res.render('classes_taken');
+app.get('/docs/attendance', (req, res) => {
+    res.render('attendance');
 });
 
 app.get('/docs/classes_taught', (req, res) => {

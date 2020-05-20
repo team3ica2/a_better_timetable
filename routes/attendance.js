@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const controllers = require('../controllers/controllers');
 
-router.route('/classes_taken')
-// returns all classes_taken
+router.route('/attendance')
+// returns all rows
   .get((req, res) => {
     const routeName = req.route.path.replace('/', '');
     if (Object.keys(req.query).length !== 0) {
@@ -29,11 +29,11 @@ router.route('/classes_taken')
         });
     }
   })
-// posts one class_taken row
+// posts one row
   .post((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    const studentJson = (req.body);
-    controllers.postOne(studentJson, routeName)
+    const infoJson = (req.body);
+    controllers.postOne(infoJson, routeName)
       .then((ret) => {
         res.sendStatus(ret);
       });
