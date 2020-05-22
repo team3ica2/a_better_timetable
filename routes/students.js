@@ -2,9 +2,12 @@ const router = require('express').Router();
 const controllers = require('../controllers/controllers');
 
 router.route('/students')
-// returns all students
   .get((req, res) => {
+    // Use the route name to get the appropriate table name,
+    // which has the same name
     const routeName = req.route.path.replace('/', '');
+    // Check for a query, if there is one, call getQuery
+    // with the query parameters
     if (Object.keys(req.query).length !== 0) {
       controllers.getQuery(req.query, routeName)
         .then((ret) => {
@@ -16,6 +19,7 @@ router.route('/students')
             });
           }
         });
+      // if there isn't a query, return all rows from the db
     } else {
       controllers.getMany(routeName)
         .then((ret) => {
@@ -38,10 +42,9 @@ router.route('/students')
         res.sendStatus(ret);
       });
   })
-
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    // deletes one student
+    // deletes one row if there is a query
     if (Object.keys(req.query).length !== 0) {
       controllers.deleteOne(req.query, routeName)
         .then((ret) => {
@@ -67,6 +70,8 @@ router.route('/students')
         });
     }
   })
+// TODO: PUT has the same functionality as PATCH as of now
+// Updates some fields in the db based on a query
   .put((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const infoJson = req.body;
@@ -82,6 +87,7 @@ router.route('/students')
         }
       });
   })
+// Updates some fields in the db based on a query
   .patch((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const infoJson = req.body;
@@ -99,6 +105,7 @@ router.route('/students')
   })
 
 router.route('/students/:studentsId/timetable')
+// Returns info relevant to create a weekly students timetable
   .get((req, res) => {
     controllers.getStudentsTimetable(req.params.studentsId)
       .then((ret) => {
@@ -110,7 +117,6 @@ router.route('/students/:studentsId/timetable')
           });
         }
       });
-
   })
 
 module.exports = router;

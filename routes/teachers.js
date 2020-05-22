@@ -2,9 +2,12 @@ const router = require('express').Router();
 const controllers = require('../controllers/controllers');
 
 router.route('/teachers')
-// returns all teachers
   .get((req, res) => {
+    // Use the route name to get the appropriate table name,
+    // which has the same name
     const routeName = req.route.path.replace('/', '');
+    // Check for a query, if there is one, call getQuery
+    // with the query parameters
     if (Object.keys(req.query).length !== 0) {
       controllers.getQuery(req.query, routeName)
         .then((ret) => {
@@ -16,6 +19,7 @@ router.route('/teachers')
             });
           }
         });
+      // if there isn't a query, return all rows from the db
     } else {
       controllers.getMany(routeName)
         .then((ret) => {
@@ -40,7 +44,7 @@ router.route('/teachers')
   })
   .delete((req, res) => {
     const routeName = req.route.path.replace('/', '');
-    // deletes one teacher
+    // deletes one row if there is a query
     if (Object.keys(req.query).length !== 0) {
       controllers.deleteOne(req.query, routeName)
         .then((ret) => {
@@ -52,20 +56,22 @@ router.route('/teachers')
             });
           }
         });
-  // deletes all teachers
+      // deletes all teachers
     } else {
       controllers.deleteMany(routeName)
-      .then((ret) => {
-        if (ret) {
-          res.send(ret);
-        } else {
-          res.status(400).json({
-            message: 'There was an error processing your request',
-          });
-        }
-      });
+        .then((ret) => {
+          if (ret) {
+            res.send(ret);
+          } else {
+            res.status(400).json({
+              message: 'There was an error processing your request',
+            });
+          }
+        });
     }
   })
+// TODO: PUT has the same functionality as PATCH as of now
+// Updates some fields in the db based on a query
   .put((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const infoJson = req.body;
@@ -81,6 +87,7 @@ router.route('/teachers')
         }
       });
   })
+// Updates some fields in the db based on a query
   .patch((req, res) => {
     const routeName = req.route.path.replace('/', '');
     const infoJson = req.body;
@@ -97,6 +104,7 @@ router.route('/teachers')
       });
   })
 
+// Returns info relevant to create a weekly students timetable
 router.route('/teachers/:teacherId/timetable')
   .get((req, res) => {
     controllers.getTeacherTimetable(req.params.teacherId)
@@ -109,7 +117,7 @@ router.route('/teachers/:teacherId/timetable')
           });
         }
       });
-    
+
   })
 
 module.exports = router;

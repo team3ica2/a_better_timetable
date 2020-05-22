@@ -7,149 +7,148 @@ const pool = mariadb.createPool({
   port: process.env.PORT || 3306,
 });
 
-
 module.exports = {
-// returns an array of JSON objects
+  // returns an array of JSON objects
   getMany: async function(tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const dbRet = await conn.query(`SELECT * FROM ${tableName}`);
-    conn.end();
-    return dbRet;
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const dbRet = await conn.query(`SELECT * FROM ${tableName}`);
+      conn.end();
+      return dbRet;
 
-  } catch (err) {
-    console.log(err);
-    return "Couldn't connect to the database";
-  }
-},
-
-// Accepts a JSON object and creates a row
+    } catch (err) {
+      console.log(err);
+      return "Couldn't connect to the database";
+    }
+  },
+  // Accepts a JSON object and creates a row
   postOne: async function(infoJson, tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const vals = [];
-    const keys = [];
-    for (const val in infoJson) {
-      keys.push(val);
-      vals.push(infoJson[val]);
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const vals = [];
+      const keys = [];
+      for (const val in infoJson) {
+        keys.push(val);
+        vals.push(infoJson[val]);
+      }
+
+      // This allows a random number of values -> this code seems pretty stupid
+      let valStr = '(';
+      for (let i = 0; i < Object.keys(infoJson).length - 1; i++) {
+        valStr += '?, ';
+      }
+      valStr += '?)';
+      const res = await conn.query(`INSERT INTO ${tableName} (${keys}) VALUES ${valStr}`, vals);
+      console.log(res);
+      conn.end();
+      return 200;
+    } catch (err) {
+      console.log(err);
+      return 400;
     }
 
-    // Allowing random number of values -> this code seems pretty stupid
-    let valStr = '(';
-    for (let i = 0; i < Object.keys(infoJson).length - 1; i++) {
-      valStr += '?, ';
-    }
-    valStr += '?)';
-    const res = await conn.query(`INSERT INTO ${tableName} (${keys}) VALUES ${valStr}`, vals);
-    console.log(res);
-    conn.end();
-    return 200;
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-
-},
-
-// Update a row
+  },
+  // Update a row
   updateOne: async function(infoJson, queries, tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const vals = [];
-    var queryString = '';
-    for (const val in infoJson) {
-      vals.push(infoJson[val]);
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const vals = [];
+      var queryString = '';
+      for (const val in infoJson) {
+        vals.push(infoJson[val]);
+      }
+      for (let val in queries) {
+        queryString += val + '=' + queries[val] + ' AND ';
+      }
+      // This allows a random number of values -> this code seems pretty stupid
+      let valStr = '';
+      for (let value in infoJson) {
+        valStr += value + '='
+        valStr += '?, ';
+      }
+      valStr = valStr.substring(0, valStr.length - 2);
+      queryString = queryString.substring(0, queryString.length - 5);
+      const res = await conn.query(`UPDATE ${tableName} SET ${valStr} WHERE ${queryString}`, vals);
+      console.log(res);
+      conn.end();
+      return 200;
+    } catch (err) {
+      console.log(err);
+      return 400;
     }
-    for (let val in queries) {
-      queryString += val + '=' + queries[val] + ' AND ';
-    }
-    // Allowing random number of values -> this code seems pretty stupid
-    let valStr = '';
-    for (let value in infoJson) {
-      valStr += value + '='
-      valStr += '?, ';
-    }
-    valStr = valStr.substring(0, valStr.length - 2);
-    queryString = queryString.substring(0, queryString.length - 5);
-    const res = await conn.query(`UPDATE ${tableName} SET ${valStr} WHERE ${queryString}`, vals);
-    console.log(res);
-    conn.end();
-    return 200;
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
 
-},
-
+  },
+  // Return JSON objects based on a query
   getQuery: async function(queries, tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    var string = ''
-    for (let val in queries) {
-      string += val + ' = ' + queries[val] + ' AND ';
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      var string = ''
+      for (let val in queries) {
+        string += val + ' = ' + queries[val] + ' AND ';
+      }
+      string = string.substring(0, string.length - 5);
+      const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE ${string} `)
+      conn.end();
+      return dbRet;
+
+    } catch (err) {
+      console.log(err);
+      return 400;
     }
-    string = string.substring(0, string.length - 5);
-    const dbRet = await conn.query(`SELECT * FROM ${tableName} WHERE ${string} `)
-    conn.end();
-    return dbRet;
-
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-},
-
-// deletes all rows
+  },
+  // deletes all rows
   deleteMany: async function(tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-    const res = await conn.query(`DELETE FROM ${tableName}`);
-    console.log(res);
-    conn.end();
-    return 200;
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query(`DELETE FROM ${tableName}`);
+      console.log(res);
+      conn.end();
+      return 200;
 
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-},
-  
-// deletes one row
-  deleteOne: async function(queries, tableName) {
-  let conn;
-  try {
-    conn = await pool.getConnection();
-        const vals = [];
-    var queryString = '';
-    for (let val in queries) {
-      queryString += val + '=' + '?' + ' AND ';
-      vals.push(queries[val]);
+    } catch (err) {
+      console.log(err);
+      return 400;
     }
-    queryString = queryString.substring(0, queryString.length - 5);
-    const res = await conn.query(`DELETE FROM ${tableName} WHERE ${queryString}`, vals);
-    console.log(res);
-    conn.end();
-    return 200;
+  },
+  // deletes one row based on a query
+  deleteOne: async function(queries, tableName) {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const vals = [];
+      var queryString = '';
+      for (let val in queries) {
+        queryString += val + '=' + '?' + ' AND ';
+        vals.push(queries[val]);
+      }
+      queryString = queryString.substring(0, queryString.length - 5);
+      const res = await conn.query(`DELETE FROM ${tableName} WHERE ${queryString}`, vals);
+      console.log(res);
+      conn.end();
+      return 200;
 
-  } catch (err) {
-    console.log(err);
-    return 400;
-  }
-},
-
+    } catch (err) {
+      console.log(err);
+      return 400;
+    }
+  },
+  // Returns a JSON object with all info needed to make a weekly
+  // timetable for a student
   getStudentsTimetable: async function(studentId) {
     let conn;
     let vals = [];
     vals.push(studentId);
     try {
       conn = await pool.getConnection();
-      const dbRet = await conn.query(`select t.class_day, t.start_time, t.end_time, t.room from students s join programme_classes p on s.programme_id=p.programme_id join classes_time t on p.class_id=t.class_id where s.current_semester=p.semester_id and s.student_id=?`, vals);
+      const dbRet = await conn.query(`select t.class_day, t.start_time, 
+      t.end_time, t.room from students s join programme_classes p on 
+      s.programme_id=p.programme_id join classes_time t on p.class_id=t.class_id 
+      where s.current_semester=p.semester_id and s.student_id=?`, vals);
       conn.end();
       return dbRet;
 
@@ -157,15 +156,19 @@ module.exports = {
       console.log(err);
       return "Couldn't connect to the database";
     }
-},
-
+  },
+  // Returns a JSON object with all info needed to make a weekly
+  // timetable for a teacher
   getTeacherTimetable: async function(teacherId) {
     let conn;
     let vals = [];
     vals.push(teacherId);
     try {
       conn = await pool.getConnection();
-      const dbRet = await conn.query(`select c.class_name, time.class_day, time.start_time, time.end_time, time.room from classes_taught t join classes_time time on t.class_id=time.class_id join classes c on t.class_id=c.class_id where t.teacher_id=?`, vals);
+      const dbRet = await conn.query(`select c.class_name, time.class_day, 
+      time.start_time, time.end_time, time.room from classes_taught t 
+      join classes_time time on t.class_id=time.class_id join classes c 
+      on t.class_id=c.class_id where t.teacher_id=?`, vals);
       conn.end();
       return dbRet;
 
@@ -173,5 +176,5 @@ module.exports = {
       console.log(err);
       return "Couldn't connect to the database";
     }
-},
+  },
 }
